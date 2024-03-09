@@ -1,0 +1,56 @@
+\lesson{1}{28 Feb 2023}{}
+
+\section{Generalised Linear Models}
+
+Generalised Linear Models (GLMs) are extension of the standard linear model $y_i = \beta x_i + \varepsilon_i$ when the response variable $y_i$ is not normal-like. The most common example of where this occurs is when $y_i$ takes for the form of \textit{count data} like the number of infectious cases for a given day for a given disease, or when $y_i$ takes the form of a \textit{probability}, like the probability that an individual will attend the beach given weather and various other covariates. \\
+\\
+In week one of this course, we define notation, what a GLM is, and some fundamental properties.
+
+\begin{definition}[Generalised Linear Model] Given covariate-response pairs $(y_i, x_i)$ a generalised linear model is defined by specifying three things:
+\begin{enumerate}
+    \item \textbf{Design Vector}: This is vector of covariates $z_i(x_i)$. A typical choice is the addition of a regression coefficient $z_i(x_i) = (1, x_{i1}, \dots, x_{ip})$. 
+
+    \item \textbf{Response Distribution}: One must define the distribution of $y_i | x_i$. In particular, the response distribution must be a member of the exponential family of distributions. 
+    
+    \item \textbf{Response/Link Function}: One must specify the mean of $y_i | x_i$ as a linear function of regression coefficients $\beta$. That is, one must provice a \textit{response function} $h$ such that 
+    $$\mu_i = h(\eta_i) = h(z_i^T\beta)$$
+    Equivalently, one can define $g = h^{-1}$ which is known as the \textit{link function}.
+\end{enumerate}
+\end{definition}
+\vspace{10pt}
+In these notes we will also be working with \textit{grouped} data. This occurs when one or more of the covariates belong to a discrete, categorical format. Instead of expressing the data set $(y_i, x_i)$ for $i=1,\dots,n$, we can truncate the data set, by grouping the samples around groups that share the same categorial combinations. When working with grouped data, we will express our data set as $(\Bar{y_i}, x_i), i=1,\dots,g$ to signify $g$ groups, and $\Bar{y_i}$ the average of responses across group $i$.
+
+\newpage
+\subsection{Exponential Family}
+
+\begin{definition}[Exponential Family]
+    We say that a random variable $Y$ is a member of the exponential family the probability density of $Y = y$ can be expressed in the following form
+    $$f_Y(y|\theta, \phi, \omega) = \exp\left(\frac{y\theta - b(\theta)}{\phi}\omega + c(y,\phi, \omega)\right)$$
+    where $\omega=1$ in general, unless when working with grouped data.
+\end{definition}
+\begin{definition}[Canonical / Natural Link Function]
+    Recall in specifying a GLM, one must specify a response function $h$ such that 
+    $$E(y_i | x_i) = \mu_i = h(\eta_i) = h(z_i^T\beta)$$
+    Once an exponential family distribution has been chosen for $y_i | x_i$, the choice of setting $h(\cdot) = b^\prime(\cdot)$ leads to the \textit{natural response function}. Equivalently, setting 
+    $$\theta(\mu_i) = b^{-1}(\mu_i) = \eta_i = z_i^T\beta$$ leads to the \textit{canconial link function}.
+\end{definition}
+\begin{note} Use of the natural link function leads to variuos convenient statistical properties.
+    
+\end{note}
+\begin{theorem}
+    For a given GLM defined on dataset $(y_i, x_i)$ with specified exponential family for the response variable $y_i | x_i$ one can prove that \begin{itemize}
+        $$E(y_i | x_i) = \mu_i = b^{\prime}(\theta_i)$$
+        and
+        $$var(y_i | x_i) = \frac{\phi}{\omega}v(\mu_i)$$
+        where $v(\mu_i) := b^{\prime\prime}(\theta)$
+    \end{itemize}
+\end{theorem}
+
+\begin{remark}[Relationship between mean and variance in GLMs]
+    An important consequence of Theorem 1 is that the mean and variance of the GLM are related, and cannot be modelled separately. To see this implication, note that the mean is a function of $\theta_i$, which must be specified when defining the GLM. Subsequently, the second equation is also a function of $\theta$.
+\end{remark}
+
+\newpage
+\subsection{Example of GLMs}
+    
+
