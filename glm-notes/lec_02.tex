@@ -12,7 +12,29 @@ The regression coefficients of the model $\beta$ are typically found via maximum
     
 \end{definition}
 
+\begin{theorem}[Properties of MLE estimates]
+    Under regularity assumptions $\hat{\beta}$ has the following \textit{nice} properties:\begin{enumerate}
+        \item \textit{Asympotic Existance and Uniqueness}. With probabilty 1 as $n\rightarrow\infty$ $\hat{\beta}$ exists and is locally unique
+        \item \textit{Consistency}. $\hat{\beta}\rightarrow\beta$ with probabilty 1. 
+        \item \textit{Asympotitcally Noraml}. $\hat{\beta}\sim N(\beta, F^{-1}(\beta))$. In practice, one typically assumes that $cov(\hat{\beta}) \approx F^{-1}(\beta)$ so $\hat{\beta}\sim N(\beta, cov(\hat{\beta}))$
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    Requires a course in asymptotic statistics to prove rigorously, but we can given an \textit{inutitive} argument below.
+\end{proof}
 
+\begin{lemma}[MLE Estimate of $\phi$]
+    A consistent estimtaor for the dispersion parameter $\phi$ is 
+    $$\hat{\phi} = \frac{1}{n-p}\sum_{i=1}^{n}\frac{y_i - \hat{\mu_i}}{v(\mu_i)}$$
+\end{lemma}
+\begin{note}
+    We only need an estimate for $\phi$ if we require an estimate for the Fisher Information Matrix. This typically arises when constructing confidence intervals.
+\end{note}
+
+\subsection{Hypothesis Testing}
+Having fit a GLM for regression coefficients $\beta$, a common task is to hypothesis test significance of the coefficients. A typical test is of the form: 
+$$H_0: \beta_r = 0 \hspace{10mm} vs. \hspace{10mm} H_1: \beta_r \neq 0$$
+where $\beta_r$ is a subvector of $\beta$. That is, a test of the signficance of some subset of some covariates of the model.
 \subsection{Assessing Model Fit}
 
 \subsection{Appendix of Algebraic Results}
