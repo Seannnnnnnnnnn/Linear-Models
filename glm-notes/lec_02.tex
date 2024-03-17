@@ -35,6 +35,20 @@ The regression coefficients of the model $\beta$ are typically found via maximum
 Having fit a GLM for regression coefficients $\beta$, a common task is to hypothesis test significance of the coefficients. A typical test is of the form: 
 $$H_0: \beta_r = 0 \hspace{10mm} vs. \hspace{10mm} H_1: \beta_r \neq 0$$
 where $\beta_r$ is a subvector of $\beta$. That is, a test of the signficance of some subset of some covariates of the model.
+
 \subsection{Assessing Model Fit}
+For a standard linear model, one typically considers the sum of squared residuals (SSE) as a measure of model fit
+\begin{align*}
+    SSE &= \sum_{i=1}^{n}(y_i - \hat{y_i})^2 \\
+    &= (y - Z\beta)^T(y-Z\beta)
+\end{align*}
+Notice that this places eqaul weight on each residual $y_i - 
+\hat{y_i}$, which is not quite as reasonable if the variance of each sample varies with $\hat{y_i}$ as is the case for GLMs. The two alternatives for GLMs is the \textit{Devience} and \textit{Pearson Statistic}.
+
+\begin{definition}[Pearson's $\chi^2$ Statistic]
+    For grouped data, Pearsons statistic is 
+    $$\chi^2 = \sum_{i=1}^{g}\frac{(\Bar{y_i} - \hat{y_i})^2}{v(\hat{\mu_i})/n_i}$$
+    where $n_i$ is the size of group $i$.
+\end{definition}
 
 \subsection{Appendix of Algebraic Results}

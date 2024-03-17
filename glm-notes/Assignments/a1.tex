@@ -1,10 +1,11 @@
 \documentclass[nocolor]{report}
 \input{../preamble.tex}
+\usepackage[legalpaper, margin=1in]{geometry}
 
 
 \begin{document}
     \newpage
-    \subsection*{\hspace{10mm} MAST90084 Statistical Modelling. Assignment 1.}
+    \subsection*{\hspace{25mm} MAST90084 Statistical Modelling. Assignment 1.}
 \begin{center}
     Sean Conlon, 1298668 \\
     sconlon@student.unimelb.edu.au
@@ -20,10 +21,25 @@ Derive the conditional joint distribution of $\{n_{ij}\}_{(i,j)\in\{1,\dots,I\}\
 \end{ex}
 \vspace{-10pt}
 \begin{soln}
-    
+    We can show that the resulting distribution is multinomial as follows:
 \end{soln}
 \begin{proof}
-
+    If we let $f_X$ denote the probability mass function of a random vector $X$ then
+    $$f_{n_{11}, \dots, n_{IJ} | n} = \frac{f_{n11, \dots, n_{IJ}, n}}{f_n}$$
+    We now find an expression for each term separately. First, we use the fact (without proof) that the sum of independant Poisson random variables is itself Poisson, so we have that 
+    $n \sim Poisson(\sum_{i=1}^{I}\sum_{j=1}^{J}\mu_{ij})$. \\
+    \\
+    Next we consider $f_{n11, \dots, n_{IJ}, n}$. We have by the fact that each $n_{ij}$ is independant:
+    \begin{align*}
+         f\left(n_{11}=m_{11}, \ldots, n_{I J}=m_{I J}, n=m\right) & =\prod_{i=1}^I \prod_{j=1}^J f\left(n_{i j}=m_{i j}\right) \mathbb{I}\left\{m=\sum_{i=1}^I \sum_{j=1}^J m_{i j}\right\} \\ & =\prod_{i=1}^I \prod_{j=1}^J \frac{\mu_{i j}^{m_{i j}} \exp ^{-\mu_{i j}}}{m_{i j} !} \mathbb{I}\left\{m=\sum_{i=1}^I \sum_{j=1}^J m_{i j}\right\} \\ & =\frac{\prod_{i=1}^I \prod_{j=1}^J \mu_{i j}^{m_{i j}} \exp ^{-\sum_{i=1}^I \sum_{j=1}^J \mu_{i j}}}{\prod_{i=1}^I \prod_{j=1}^J m_{i j} !} \mathbb{I}\left\{m=\sum_{i=1}^I \sum_{j=1}^J m_{i j}\right\}
+    \end{align*}
+    Combining both expressions yields: 
+    \begin{align*}
+        f\left(n_{11}\right. & \left.=m_{11}, \ldots, n_{I J}=m_{I J} \mid n=m\right)=\frac{f\left(n_{11}=m_{11}, \ldots, n_{I J}=m_{I J}, n=m\right)}{f(n=m)} \\ & =\frac{\prod_{i=1}^I \prod_{j=1}^J \mu_{i j}^{m_{i j}} \exp ^{-\sum_{i=1}^I \sum_{j=1}^J \mu_{i j}}}{\prod_{i=1}^I \prod_{j=1}^J m_{i j} !} \frac{m !}{\left(\sum_{i=1}^I \sum_{j=1}^J \mu_{i j}\right)^m \exp ^{-\sum_{i=1}^I \sum_{j=1}^J \mu_{i j}}} \\ & =\frac{m !}{\prod_{i=1}^I \prod_{j=1}^J m_{i j} !} \frac{\prod_{i=1}^I \prod_{j=1}^J \mu_{i j}^{m_{i j}}}{\left(\sum_{i=1}^I \sum_{j=1}^J \mu_{i j}\right)^{\sum_{i=1}^I \sum_{j=1}^J m_{i j}}} \\ & =\frac{m !}{\prod_{i=1}^I \prod_{j=1}^J m_{i j} !} \prod_{i=1}^I \prod_{j=1}^J\left(\frac{\mu_{i j}}{\sum_{i=1}^I \sum_{j=1}^J \mu_{i j}}\right)^{m_{i j}}
+    \end{align*}
+    From here, we can recognise the above density as belonging to a Multinomial Distribution with $m$ trials, $I\times J$ number of mutually exclusive events and success probability 
+    $p = \mu_{ij} / n$
+    
 \end{proof}
 
 \begin{ex}[Question 1b] For a $2\times 2$ contingency table the quantity $\frac{\mu_{11}/\mu_{12}}{\mu_{21}/\mu_{22}}$, also known as the \textit{odds ratio}, measures the association between $X$ and $Y$. What should be the values of the odds ratio of $X$ and $Y$ are independant and why?
@@ -33,10 +49,79 @@ Derive the conditional joint distribution of $\{n_{ij}\}_{(i,j)\in\{1,\dots,I\}\
     The \textit{odds ratio} for two independent events $X$ and $Y$ would be 1. We can prove this formally as follows:
 \end{soln}
 \begin{proof}
-
+    Let $X_i$ be from category $I$ and $Y_j$ from category $J$ such that $X_i \sim Poisson(\alpha_i)$ and $Y_j \sim Posson(\beta_j)$. It follows 
+    \begin{align*}
+        \mu_{ij} &= \mathbb{E}[n_{ij}] \\
+        &= \mathbb{E}[X_i Y_j] \\
+        &= \mathbb{E}[X_i] \mathbb{E}[Y_j] \hspace{10mm} \text{by Independence}\\
+        &= \alpha_i \beta_j
+    \end{align*}
+    Thus, the odds ratio must follow
+    $$\frac{\mu_{11} / \mu_{12}}{\mu_{21} / \mu_{22}}=\frac{\alpha_1 \beta_1 / \alpha_1 \beta_2}{\alpha_2 \beta_1 / \alpha_2 \beta_2}=\frac{\beta_1 / \beta_2}{\beta_1 / \beta_2}=1$$
 \end{proof}
 
+\newpage
+\begin{ex}[Question 2a] 
+    A log-linear model \texttt{mod1} can be fitted to the data, with the results being given in the following R output. Give the mathematical formula of form $\ln(\mu)$ = · · · for the mean model of \texttt{mod1}, where $\mu$ is the mean of the response. Any dummy variables in your formula should be explicitly defined.
+\end{ex}
+\vspace{-10pt}
+\begin{soln}
+The model is given by
+    $$
+\ln (\mu)=\beta_0+\beta_1 X+\beta_2 Y+\beta_3 Z+\beta_4 X Y+\beta_5 X Z+\beta_6 Z Y
+$$
+where $X=\mathbb{I}\{$ Can $=$ "Case" $\}, Y=\mathbb{I}\{$ Smo $=$ "Yes" $\}$ and $Z=\mathbb{I}\{$ Cnt $="$ Japan" $\}+2 \mathbb{I}\{$ Cnt $=$ $" U K "\}$ and $\mathbb{I}$ denotes an indicator variable.
+\end{soln}
 
+\begin{ex}[Question 2b] 
+    Explain why
+the model in part (a) has $XY$ homogenous association
+\end{ex}
+\vspace{-10pt}
+\begin{soln}
+    The odds ratio $\theta_{X Y}(k)$ gives the level of association between variables $X$ and $Y$ given a specific value of $Z=k$. The empirical odds ratio for each $Z$ is,
+    \begin{align*}
+        & \theta_{X Y(" J a p a n ")}=\frac{73 \times 82}{188 \times 21}=1.52 \\
+        & \theta_{X Y(" U K ")}=\frac{19 \times 16}{38 \times 5}=1.6 \\
+        & \theta_{X Y(" U S A ")}=\frac{137 \times 249}{363 \times 71}=1.32
+    \end{align*}
+Therefore, since $\theta_{X Y \text { ("Japan") }} \approx \theta_{X Y(" U K ")} \approx \theta_{X Y(" U S A ")}$ we can say that $X Y$ has homogeneous association.
+\end{soln}
+
+\begin{ex}[Question 2c] 
+    Based on the displayed R output in (a), test the significance of the interaction effect \texttt{Smo:Can} at significance level 0.05, eliminating the effects of all other terms in \texttt{mod1}. Provide your conclusion with clear explanation.
+\end{ex}
+\vspace{-10pt}
+\begin{soln}
+    By looking at the output of the anova function, we can see that the p-value of the interaction term for \texttt{Smo:Can} is 0.0184215 < 0.05. This means that we reject the null hypothesis that states there is
+no difference between models that include this interaction term and the model that does not. This means the interaction term \texttt{Smo:Can} is significant at the 0.05 level.
+\end{soln}
+
+
+\begin{ex}[Question 2d] 
+    Based on the displayed R output in (a), test the adequacy/goodness-of-fit of model
+    \texttt{Cnt+Smo+Can+Cnt:Smo+Cnt:Can}
+at significance level 0.05. Provide your conclusion with clear explanation.
+\end{ex}
+\vspace{-10pt}
+\begin{soln}
+    Under this model specification, the deviance test returns a p-value of 0.1217566. This means that
+this model should not be rejected at the 0.05 significance level.
+\end{soln}
+
+\begin{ex}[Question 2e] 
+    Are your conclusions in (c) and (d) contradictory?
+\end{ex}
+\vspace{-10pt}
+\begin{soln}
+    No the answers are not contradictory. In (c) we are saying that the model with the \texttt{Smo:Can}
+interaction term, is not the same as the model without this term. In (d) we are saying that the model
+without this interaction term is an acceptable model under a deviance test at the 0.05 acceptance
+level. We can also see that the deviance test for the model that includes this interaction term is
+0.8869204 which is also an acceptable model at the 0.05 significance level.
+\end{soln}
+
+\newpage
 \begin{ex}[Question 3a] When the parameter $\kappa$ is fixed, prove that the Negative Binomial distribution belongs to the exponential dispurtion model. Idenfity the natural parameter $\theta$ and the dispersion paramerte $\phi$ in terms of $\mu$ and $\kappa$ where appropriate, and identify $b(\cdot)$ as a function of $\theta$. Assume $\omega = 1$.
 \end{ex}
 \begin{proof}
@@ -44,13 +129,33 @@ Derive the conditional joint distribution of $\{n_{ij}\}_{(i,j)\in\{1,\dots,I\}\
     \begin{align*}
         \frac{\kappa^\kappa, \mu^y}{(\mu+\kappa)^{\kappa + y}} = \left(\frac{\kappa}{\mu+\kappa}\right)^\kappa \left(\frac{\mu}{\mu+\kappa}\right)^y
     \end{align*}
+    So it follows 
+    \begin{align*}
+        \mathbb{P}(Y = y | \mu, \kappa) &= \left(\frac{\kappa}{\mu+\kappa}\right)^\kappa \left(\frac{\mu}{\mu+\kappa}\right)^y \frac{\Gamma(x+y)}{\Gamma(\kappa)y!} \\
+        &= \exp\left( y \ln\left(\frac{\mu}{\mu+\kappa}\right) + \kappa \ln \left(\frac{\kappa}{\mu+\kappa}\right) + \ln  \frac{\Gamma(x+y)}{\Gamma(\kappa)y!}\right)
+    \end{align*}
+    We can now read off the components of the EDM as follows: 
+    \begin{align*}
+        & \theta = \ln \left(\frac{\mu}{\mu+\kappa}\right) \\
+        & \phi = 1 \\
+        & b(\theta) = -\kappa \ln \left(\frac{\kappa}{\mu+\kappa}\right)
+    \end{align*}
 \end{proof}
 
+
 \begin{ex}[Question 3b] 
+    Let $\sigma^2$ be the variance of $Y$ . From your answer above, derive the formula for $\sigma^2$ as a function of $\mu$. Why do we say that the NB distribution can be used as a likelihood model to handle “overdispersion” compared to the Poisson distribution?
 \end{ex}
 \vspace{-10pt}
 \begin{soln}
-    The \textit{odds ratio} for two independent events $X$ and $Y$ would be 1. We can prove this formally as follows:
+    From the above, we can derive the variance of $Y$ as follows: 
+    \begin{align*} \sigma^2 & =\frac{\partial^2}{\partial \theta^2} b(\theta) \\ 
+    & =\frac{\partial}{\partial \theta} \frac{\kappa e^\theta}{1-e^\theta} \\ 
+    & =\kappa e^{-\theta}\left(e^{-\theta}-1\right)^{-2} \\ & =\kappa e^{-\ln \left(\frac{\mu}{\mu+\kappa}\right)}\left(e^{-\ln \left(\frac{\mu}{\mu+\kappa}\right)}-1\right)^{-2} \\ & =\kappa \frac{\mu+\kappa}{\mu}\left(\frac{\mu+\kappa}{\mu}-1\right)^{-2} \\ & =\frac{\mu(\mu+\kappa)}{\kappa} \\ & =\frac{1}{\kappa} \mu^2+\mu\end{align*}
+    We now consider the latter question of overdispersion. Recall that \textit{overdispersion} refers to the situation in which the variance reported by the model underestimates the true variance. In the case of the Poisson likelihood model, the variance is determined by the mean, as for any random variable $X\sim Poisson(\lambda)$ we have 
+$\mathbb{E}[X] = Var(X) = \lambda$. Hence, once we have fitted the mean of the Poisson likelihood model, the variance has immediately been fixed also; which can naturally result in overdispersion.\\
+\\
+In the case of the NB distribution  however, we have the free variable in $\kappa$ which we can fit and set \textit{a priori} to model the variance separately to the mean. This means, we can avoid overdispersion, by appropriately adjusting $\kappa$ to tune the variance reported by the model, without impacting its mean.
 \end{soln}
 
 
