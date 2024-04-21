@@ -2,6 +2,7 @@
 
 \section{Generalised Linear Models}
 
+
 Generalised Linear Models (GLMs) are extension of the standard linear model $y_i = \beta x_i + \varepsilon_i$ when the response variable $y_i$ is not normal-like. The most common example of where this occurs is when $y_i$ takes for the form of \textit{count data} like the number of infectious cases for a given day for a given disease, or when $y_i$ takes the form of a \textit{probability}, like the probability that an individual will attend the beach given weather and various other covariates. \\
 \\
 In week one of this course, we define notation, what a GLM is, and some fundamental properties.
@@ -54,3 +55,33 @@ In these notes we will also be working with \textit{grouped} data. This occurs w
 \subsection{Example of GLMs}
     
 
+\newpage
+\subsection{Notes on Data}
+
+
+\subsubsection*{Coding Categorical Covariates}
+
+As in common linear regression, qualitative covariates have to be coded ap- propriately. A categorical covariate (or factor) $x$ with $x$ possible categories $1,\dots,k$ will generally be coded by a "dummy vector" with $q = k - 1$ components $x^{(1)},\dots,x^{(q)}$. There are two main flavours of data encoding:
+
+\begin{definition}[Dummy Coding]
+    If Categorical covaraiates are 0-1 dummy coded then $x^{(j)}$ for $j=1,\dots,q$ is defined by
+    \[ x^{(j)} = \begin{cases} 
+      1 & \text{if category $j$ is observed} \\
+      0 & \text{otherwise}
+   \end{cases}
+    \]
+    If the $k$th category , the \textit{reference category}, is observed then $x$ is the zero vector
+\end{definition}
+
+\begin{definition}[Effect Coding]
+    If Categorical covariates are effect coded then $x^{(j)}$ for $j=1,\dots,q$ is defined by
+    \[ x^{(j)} = \begin{cases} 
+      1 & \text{if category $j$ is observed} \\
+      -1 & \text{if category $k$ is observed} \\
+      0 & \text{otherwise}
+    \end{cases}
+    \]
+    If the $k$th category , the \textit{reference category}, is observed then $x$ is the vector $(-1,\dots,-1)$
+\end{definition}
+
+\subsubsection*{Grouped Data}

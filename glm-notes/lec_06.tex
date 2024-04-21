@@ -1,0 +1,88 @@
+\lesson{6}{28 Feb 2023}{}
+
+\section{Models for Ordinal Responses}
+
+A useful dataset to look at is the \textit{Breathing test results} from our text book F\$T. BTR has 3 levels: Normal, Borderline, Abnormal. This is a \textit{grouped continuous variable}: a categorised version of a continuous variable. In the same text, \textit{Job Expectations} dataset is another example of such a response; which uses student age in years to predict their employment expectations upon completing their degree. 
+
+
+\subsection{Cumulative Models: The Threshold Approach}
+One way to fit such datasets using linear models is the so called \textit{Cumulative model}. 
+
+\begin{definition}[Cumulative Model]
+    Given a response variable $Y$ with $k$ categories, the cumulative model is a vategorised version of a latent continuous variable $U$, where $Y$ determined by $U$ as
+    $$Y = r \iff \theta_{r-1}\leq U\leq\theta_r \quad r=1,\dots,k$$
+    Where the \textit{thresholds} $-\infty=\theta_0<\dots<\theta_k=+\infty$ are unknown and to be fit through data. \\
+    \\
+    $U$ itself is determined by a $p\times 1$ explantaory variable $x$ as
+    $$U = -x^T\gamma+\varepsilon$$
+    where $\gamma=(\gamma_1,\dots,\gamma_p)^T$ is an unknown vector parameter and $\varepsilon$ is random with cdf $F$. It follows that the \textit{\textbf{cumultative model}} or \textit{\textbf{threshold model}} is given by
+    $$P(Y\leq r | x) = P(U\leq \theta_r | x) = F(\theta_r + x^T\gamma)$$ 
+\end{definition}
+From the above, we see that different choices of distribution function $F$ give rise to different models. We can see the following examples. 
+\begin{eg}[Cumulative Logistic Model]
+    Suppose $F$ is the logisitic function. $F(x) = (1+e^{-x})^{-1}$ Then the cumulative model is given by 
+    \begin{align*}
+        P(Y\leq r |x) &= (1+e^{-\theta_r + x^T\gamma})^{-1} \\
+        &= \frac{e^{-\theta_r + x^T\gamma}}{1+e^{-\theta_r + x^T\gamma}} \quad r=1,\dots,k
+    \end{align*}
+    Note that it is also important to verify that this model is \textit{sensible} in that $P(Y\leq1|x)\leq\dots\leq P(Y\leq k|x)$. Of course, this is satisfied as $F(x)$ is increasing in $x$ and by the ordinal set up of $\theta_i$'s.
+\end{eg}
+\begin{eg}[Grouped Cox / Proportinal Hazards Model]
+    Suppose $F$ is of the form
+    $F(x) = 1 - \exp(-e^{x})$ 
+    The $P(Y\leq r |x) = 1-\exp(-e^{\theta_r + x^T\gamma })$ with complementary log-log link given by
+    $$\log[-\log(P(y>r|x))] = \theta_r + x^T\gamma \quad r = 1,\dots,k$$1
+    This model has the following interpretation: define the \textit{hazard function}
+    $$\lambda(r|\cdot) = -\frac{d}{dr}P(Y\geq r|\cdot) = \frac{P(Y=r)}{P(Y\geq r)}$$
+    The interpretation of $\lambda(r|\cdot)$ is the probability that a failure occurs instantaneously at time $r$, given no failure before time $r$.
+\end{eg}
+Cumulative models can be extended further by including category-specific coefficients as well, by adding a linear form for the thresholds. 
+\begin{definition}[Extended Cumulative Models]
+    Assume the cumulative model as before, though now each threshold has the form 
+    $$\theta_r = w^T\beta_r$$
+    where $w$ is a vector of explanatory variables and $\beta_r = (\beta_{r0, \dots, \beta_{rm}})^T$ is a \textit{category-specific} parameter vector. The extended cumulative model is then obtained by 
+    $$P(Y\leq r | x,w) = F(w^T\beta + x^T\gamma)$$
+\end{definition}
+\begin{remark}
+    Be aware of the following for extended cumulative models \begin{itemize}
+        \item the model become unidentidiable from $\beta_r$ if $w_i = x_i$, (ie, the fitting procedure will produce a single vector of estimates $(\beta + \gamma)$ and it will be impossible to distinguish between the two)  so we the data used to fit the model must satisfy $w_i \neq x_i$
+        \item This above remark is extremely problematic, as it violates all our previous likelihood theory \todo{why?}
+        \item It's common to refer to $w_i$ as the \textit{threshold variables} and $x_i$ as the \textit{shift variables}.
+    \end{itemize}
+\end{remark}
+
+
+\subsection{Cumulaltive Models as MGLMs}
+Indeed, such models are Multinomial GLM's. For an illustration of this suppose $\pi_i := P(Y=i)$ for $i=1,\dots,k-1$ and $\pi_k := 1 - \sum_{i=1}^{k-1}\pi_i$. Recall that the $k-1$ vector that \textit{dummy encodes} $Y$ with reference level $k$ is multinomial-distributed; and hence an exponential family. To see the structure assumption of cumulative models: the link function $g = (g_1,\dots,g_k)^T$ is a vector-valued function of the mean vector $(\pi_1,\dots,\pi_k)^T$ given by 
+$$g_r(\pi_1,\dots,\pi_{k}) = F^{-1}(\pi_1+\dots+\pi_r)$$
+and $F^{-1}$ acts as the link function specifying the cumulative model 
+$$\pi_1 + \dots + \pi_r := P(Y\leq r|x,w) = F( w^T\beta_r + x^T\gamma )$$
+Finally the response function is given by $\pi_r$ where
+\begin{align*}
+    & \pi_1 = P(Y\leq 1 | x,w) \hspace{5mm} \text{and} \\
+    & \pi_r = P(Y\leq r | x,w) - P(Y\leq r-1|x,w) \quad r=2,\dots,k
+\end{align*}
+
+\subsection{Design Matrices for Cumulative Models}
+TODO: add screenshots
+
+
+\subsection{Alternative Parameterisation in Cumulative Models}
+For threshold parameters $\theta_1,\dots,\theta_{k-1}$ in simple cumulative models $P(Y\leq r|x) = F(\theta_r | x^T\gamma)$ are restricted by $$\theta_1<\dots<\theta_{k-1}$$The corresponding restriction for the extended cumulative model is 
+$$w^T\beta_1<\dots<w^T\beta_{k-1}$$
+without explicitly accounting for these constraints, an iterative estimation procedure may fit inadmissible parameters for the GLM. Fortunately, we can re-parameterise the model to give unconstrained parameters. 
+
+\begin{lemma}[Re-parameterisation for Simple Cumulative Models]
+    For the simple cumulative model the paramertisation: 
+    $$\alpha_1 = \theta_1 \quad \alpha_r = log(\theta_r - \theta_{r-1}) \quad r =1,\dots,k-1$$
+    gives an unconstrained model in terms of $\alpha_i$
+\end{lemma}
+\begin{proof}
+    For $r>1$ we have $\theta_r = \theta_1 + \sum_{i=2}^{r}e^{\alpha_i}$
+\end{proof}
+\begin{remark}[Pathological Case]
+    An extremely rare and pathological case occurs when $\theta_r = \theta_{r-1}$ results in a $\log0$ which is undefined. To prevent this from occurring, we typically assume strict inequalities so that $\theta_r < \theta_{r+1}$. In practice, one can also use smoothing methods by adding a small enough $\epsilon$ term should this arise.
+\end{remark}
+
+
+

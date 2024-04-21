@@ -1,0 +1,80 @@
+\lesson{5}{28 Feb 2023}{}
+
+\section{Multivariate Response GLM}
+
+We now consider the glm analog of the multiple linear regression model given by 
+\begin{align}
+    Y = X\beta + U \hspace{5mm} U \sim N(0, \Sigma)
+\end{align}
+Where $X\in\mathbb{R}^{n\times p}, Y\in\mathbb{R}^{n\times q}, \beta\in\mathbb{R}^{p\times q}$. Via the maximam likelihood approach this leads to the estimates of regression coefficients given by $\hat{\beta} = (X^T X)^{-1}X^TY$. Compared to the standard linear model presented in chapter one, there is really nothing special about the model $(1)$ as well, it's just the multi-dimensional analog. We now shift our focus to a glm-version of $(1)$ and in particular for modelling the instance where the response $Y$ is not normal-like
+
+\begin{definition}[Multivariate Generalised Linear Model]
+    A Multivariate Generalised Linear Model (mglm) is defined by the following three specifications 
+    \begin{enumerate}
+        \item $\mu_i := E[y | x_i] \in\mathbb{R}^{q\times 1}$ 
+        \item Given $x_i$'s the $y_i$ are independent, with each having a multivariate exponential family density
+        $$f(y_i | \theta_i, \phi,\omega_i) = \exp\left\{\frac{y_i\theta_i - b(\theta_i)}{\phi}\omega_i + c(y_i,\phi,\omega_i)\right\}$$
+        For natural parameter $\theta_i$
+        \item $\mu_i$ depends on the linear predictor $\eta_i = z_i\beta$ in the form 
+        $$\mu_i = h(\eta_i) = h(z_i\beta) = [h_1(z_i\beta),\dots,h_q(z_i\beta)]^T$$
+    \end{enumerate}
+\end{definition}
+
+
+
+\subsection{Principle of Maximum Random Utility}
+Models for a response variable $Y$ with unordered categories $1,\dots,k$ are typically modelled via \textit{latent variables.} For $r=1,\dots,k$ let $U_r$ be the latent (unobserved) variable associated with the $r$-th category given by 
+$$U_r = u_r + \epsilon_r$$
+where $u_r$ is a fixed value associated with the $r$-th category and $\epsilon_1,\dots,\epsilon_k$ are i.i.d random variables with continuous cdf $F$. Then, the \textbf{principle of maximum random utility} determines $Y$ by 
+$$Y = r \hspace{5mm} \iff \hspace{5mm} U_r = \max(U_1,\dots,U_k)$$
+It then follows that 
+\begin{align*}
+    P(Y = r) &= P(U_r - U_1\geq0,\dots,U_r - U_k\geq0) \\
+    &= P(u_r - u_1 + \epsilon_r \geq \epsilon_1,\dots,u_r - u_k + \epsilon_r \geq \epsilon_k) \\
+    &= \int_{-\infty}^{+\infty}\prod_{s\neq r}F(u_r - u_s + \epsilon_r )f(\epsilon)d\epsilon
+\end{align*}
+where $f = F^\prime$ is the density of $\varepsilon_r$. Different distribution assumptions (choices of $F$) lead to the different models. 
+
+\begin{eg}[Multinomial Logit Model]
+    
+\end{eg}
+
+
+\subsection{Modelling Explanatory Variables}
+In categorical response models both covariates and regression coefficients can be of different types: 
+\begin{itemize}
+    \item \textbf{global}: values depend on individuals $z_i$ but not dependent on category
+    \item \textbf{category specific}: values depend on the category $1,\dots,k$
+\end{itemize}
+
+\begin{eg}[Global \& Category Specific]
+    Consider the mean utility for individual $i$ for category $r$ is given by $u_{ir}$ where 
+    $$u_{ir} = z_i^T\beta_r$$
+    then $z_i$ are global and $\beta_r$ are category specific. CSuppose instead that $u_{ir}$ has the form
+    $$u_{ir} = z_i^T\beta_r + w_r^T\gamma$$
+    Then the covariates $w_r^T$ are category specific.
+\end{eg}
+
+
+\newpage
+\subsection{Appendix: The Multinomial Distribution}
+The most common way we will be consider non-scalar responses $Y$ will be via a categorical response. To help model this we will define the multi-nomial distribution and given an intuition for where it arises it categorical modelling. \\
+\\
+Suppose $Y$ is a discrete random variable satisfying $Y\in\{1,\dots,k\}$. The $Y$ can be enconded as 
+    \[y_r =\begin{cases} 
+      1 & Y = r \\
+      0 & \text{otherwise.}
+   \end{cases}
+\]
+for simplicity, we'll denote $r = 1,\dots,q=k-1$. For $r\in\{1,\dots,k\}$ denote $\pi_r := P(Y=r)$ so $\sum_{r=1}^{k}\pi_r = 1$. Now we can define the vector of probabilities $\pi = (\pi_1, \dots, \pi_q)$ and mean vector $\Tilde{y}$  for $m$ observations of $Y$ is given by 
+\begin{align*}
+    \Tilde{y} &= (\Tilde{y_1}, \dots, \Tilde{y_q}) \\
+    &=\left(\sum_{i=1}^{m}y_{i1}, \dots, \sum_{i=1}^{m}y_{q1} \right)
+\end{align*}
+Then $\Tilde{y}\sim \text{Multinomial}(m,\pi)$.
+
+\begin{definition}[Multinomial Distribution]
+    
+\end{definition}
+
+

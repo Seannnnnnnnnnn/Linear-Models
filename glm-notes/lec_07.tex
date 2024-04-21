@@ -1,0 +1,15 @@
+\lesson{7}{28 Feb 2023}{}
+
+\section{Sequential Models for Ordinal Responses}
+
+Sequential models are another class of MGLMs where the link has the form 
+$$g_r(\pi_1, \dots, p_q) = F^{-1}\left(\frac{\pi_r}{1 - \sum_{i=1}^{r-1}\pi_i}\right) = F^{-1}\left(\frac{P(Y=r)}{Y\geq r}\right)$$
+For a motivating example as for why we study such models, we refer to example 3.6 in the reference text F\&T; which studies the presence of bacteria on Tonsil size. Notice that the response for such data lies in $\{\text{not enlarged, enlarged, greatly enlarged}\}$; the essence of sequential models is to capture the behaviour that a patient can't move from enlarged to greatly enlarged, they must be in the middle state of \textit{enlarged} first. \\
+\\
+Generally, sequential models model hte transition from category $r$ to category $r+1$ given that category $r$ is reached.
+
+
+%family=negative_binomial(1/theta, link=log)
+%beta_new = abovefit\$coef
+
+

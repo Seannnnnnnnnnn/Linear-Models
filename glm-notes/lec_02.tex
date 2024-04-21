@@ -14,17 +14,17 @@ The regression coefficients of the model $\beta$ are typically found via maximum
 
 \begin{theorem}[Properties of MLE estimates]
     Under regularity assumptions $\hat{\beta}$ has the following \textit{nice} properties:\begin{enumerate}
-        \item \textit{Asympotic Existance and Uniqueness}. With probabilty 1 as $n\rightarrow\infty$ $\hat{\beta}$ exists and is locally unique
-        \item \textit{Consistency}. $\hat{\beta}\rightarrow\beta$ with probabilty 1. 
-        \item \textit{Asympotitcally Noraml}. $\hat{\beta}\sim N(\beta, F^{-1}(\beta))$. In practice, one typically assumes that $cov(\hat{\beta}) \approx F^{-1}(\beta)$ so $\hat{\beta}\sim N(\beta, cov(\hat{\beta}))$
+        \item \textit{Asympotic Existance and Uniqueness}. With probability 1 as $n\rightarrow\infty$ $\hat{\beta}$ exists and is locally unique
+        \item \textit{Consistency}. $\hat{\beta}\rightarrow\beta$ with probability 1. 
+        \item \textit{Asymptotically Normal}. $\hat{\beta}\sim N(\beta, F^{-1}(\beta))$. In practice, one typically assumes that $cov(\hat{\beta}) \approx F^{-1}(\beta)$ so $\hat{\beta}\sim N(\beta, cov(\hat{\beta}))$
     \end{enumerate}
 \end{theorem}
 \begin{proof}
-    Requires a course in asymptotic statistics to prove rigorously, but we can given an \textit{inutitive} argument below.
+    Requires a course in asymptotic statistics to prove rigorously, but we can given an \textit{intuitive} argument below.
 \end{proof}
 
 \begin{lemma}[MLE Estimate of $\phi$]
-    A consistent estimtaor for the dispersion parameter $\phi$ is 
+    A consistent estimator for the dispersion parameter $\phi$ is 
     $$\hat{\phi} = \frac{1}{n-p}\sum_{i=1}^{n}\frac{y_i - \hat{\mu_i}}{v(\mu_i)}$$
 \end{lemma}
 \begin{note}
