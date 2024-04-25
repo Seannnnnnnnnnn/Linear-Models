@@ -6,10 +6,24 @@ Sequential models are another class of MGLMs where the link has the form
 $$g_r(\pi_1, \dots, p_q) = F^{-1}\left(\frac{\pi_r}{1 - \sum_{i=1}^{r-1}\pi_i}\right) = F^{-1}\left(\frac{P(Y=r)}{Y\geq r}\right)$$
 For a motivating example as for why we study such models, we refer to example 3.6 in the reference text F\&T; which studies the presence of bacteria on Tonsil size. Notice that the response for such data lies in $\{\text{not enlarged, enlarged, greatly enlarged}\}$; the essence of sequential models is to capture the behaviour that a patient can't move from enlarged to greatly enlarged, they must be in the middle state of \textit{enlarged} first. \\
 \\
-Generally, sequential models model hte transition from category $r$ to category $r+1$ given that category $r$ is reached.
+Generally, sequential models model the transition from category $r$ to category $r+1$ given that category $r$ is reached.
 
 
-%family=negative_binomial(1/theta, link=log)
-%beta_new = abovefit\$coef
+\subsection{Fitting \& Assessing MGLM's}
 
+We now cover the practice of fitting a MGLM and methods of assessing model fit. Fortunately, these are all really just multivariate analogs of the single-dimension case. 
+
+\subsection{Power Divergance Family Statistic}
+For multinomial data, Pearson and Deviance statistics belong to a family of statistics called \textit{power divergance} with paramter $\lambda\neq0\in\mathbb{R}$.
+
+\begin{definition}[Power Divergance Family]
+    A statistic $S_\lambda$ is a member of the power divergance family if it is of the form 
+    \begin{align*}
+        S_\lambda &= \sum_{i=1}^{g}SD_\lambda(y_i , \hat{\pi}_i) \\
+        &= \sum_{i=1}^{g}\frac{2n_i}{\lambda(\lambda+1)}\sum_{j=1}^{k}y_{ij}\left(\left(\frac{y_{ij}}{\hat{\pi}_{ij}}\right)^\lambda-1\right)
+    \end{align*}
+\end{definition}
+Note that in the above definition, the form of each $SD_\lambda(\cdot)$ assesses the fit of the model by comparing the \textit{expected} and \textit{observed} frequencies. Under the classical asymptotics for grouped data with $g$ fixed and $\n_i/n\to\lambda_i$ as $n\to\infty$ we have the usual theoretical result that 
+$$S_\lambda \stackrel{a}{\sim}\chi^2(g(k-1)-p) \hspace{10mm} (1)$$
+As noted by practitioners, $(1)$ is rarely seen in practice, as the number of observations for a fixed covariate value is often samll. Under such sparseness conditions, one usually considers the asymptotic regime where both $n$ and $g$ tend to infinity. Under such scenarios, $S_\lambda$ is asymptotically normal with further regularity conditions.
 
